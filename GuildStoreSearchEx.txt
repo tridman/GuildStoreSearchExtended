@@ -2,9 +2,9 @@
 ; Media Inc. or its affiliates. The Elder Scrolls® and related logos are
 ; registered trademarks or trademarks of ZeniMax Media Inc. in the United
 ; States and/or other countries. All rights reserved.
-## Title: |c2080D0Guild Store Search |cffffc0Extended
+## Title: |c2080D0Guild Store Search|r |cffffc0Extended|r |cFF0000Fix|r
 ## Author: lintydruid/Sephiroth018
-## Version: 0.09-beta-Fix1
+## Version: 0.09-beta-Fix2
 ## APIVersion: 100007
 ## SavedVariables: gsse_data
 ## OptionalDependsOn: LibStub LibAddonMenu-1.0 BugEater
