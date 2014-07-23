@@ -1,4 +1,4 @@
-GuildStoreSearchExtendedFix
+Guild Store Search Extended [En/Fr/De]
 ===========================
 
-Patch for the ESO addon [Guild Store Search Extended](http://www.esoui.com/downloads/fileinfo.php?id=312) by [lintydruid](http://www.esoui.com/forums/member.php?action=getinfo&userid=478)
+This is an enhanced version of [Guild Store Search](http://www.esoui.com/downloads/info200-GuildStoreSearch.html) by [evoran](http://www.esoui.com/forums/member.php?action=getinfo&userid=4876).
