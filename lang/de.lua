@@ -3,7 +3,8 @@ function gsse.lang.sets.de()
 	--- General Strings
 
 	gsse.lang.core.addonName="Guild Store Search Extended";
-	
+    gsse.lang.core.coloredAddonName="|c2080D0Guild Store Search|r |cffffc0Extended|r";
+
 	
 	----Config------
 	

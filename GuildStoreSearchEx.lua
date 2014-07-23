@@ -11,7 +11,9 @@ gsse={
     MAX_GUILD_ID = 5,
     dropDownInit=false,
     last_search_count=0,		
-    language_options={"Auto","English","Deutsch","Français"},		
+    language_options={"Auto","English","Deutsch","Français"},
+    Version = "0.11-beta",
+    Author = "lintydruid/Sephiroth08",	
 }
 gsse.data={
     window={x=0,y=0},
@@ -31,6 +33,21 @@ gsse.lang.sets={}
 gsse.lang.core={}
 gsse.lang.gui={}
 gsse.lang.config={}		
+
+gsse.defaults = {
+    window = {
+        x=0,
+        y=0,
+    },
+    undercutPerc = 5,
+    showdebug = false,
+    language = "Auto",
+    tooltips = {
+        session = true,
+        history = true,
+        recommend = true
+    },
+}
 
 -------------------------------Output --------------------
 function gsse.message (text)
@@ -60,7 +77,6 @@ end
 
 function gsse.Initialize(eventCode, addOnName)
     if(addOnName == "GuildStoreSearchEx") then
-        local defaults={window={x=0,y=0},	undercutPerc=5}
         --	Load saved vars
         gsse.data = ZO_SavedVars:NewAccountWide( "gsse_data" , 1 , nil ,defaults  , nil )
 
@@ -457,7 +473,7 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
                 --  GuildStoreSearchExFindMatchesButton:SetHidden(false)
                 gsse.SetState("NONE")
             else
-                SaveSwitchTradingHouseGuild("", guildId + 1)
+                gsse.SaveSwitchTradingHouseGuild("", guildId + 1)
             end
         else 
             local resultCount = table.getn(gsse.data.search_results)
@@ -468,7 +484,7 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
     end
 end
 
-local function SaveSwitchTradingHouseGuild(name, guildId)
+function gsse.SaveSwitchTradingHouseGuild(name, guildId)
     local delay = GetTradingHouseCooldownRemaining()
 
     if delay > 0 then
@@ -476,7 +492,7 @@ local function SaveSwitchTradingHouseGuild(name, guildId)
         local delayInSeconds = math.ceil(delay / 1000)
         gsse.debug("waiting "..delay.."ms before switching to "..guildId)
         GuildStoreSearchExStatus:SetText(string.format(gsse.lang.gui.searchpause, delayInSeconds));
-        ld_timer.addWithData("GSSE_Search", delay, SaveSwitchTradingHouseGuild, 1, guildId)  
+        ld_timer.addWithData("GSSE_Search", delay, gsse.SaveSwitchTradingHouseGuild, 1, guildId)  
     else
         gsse.debug("executing switching to "..guildId)
         SelectTradingHouseGuildId(guildId)
@@ -630,10 +646,10 @@ function  gsse.queueTradingHouseSearch(a,b,c)
     --need a message mere
     gsse.debug("Queuing request for "..a..", "..b)
 
-    SaveQueueTradingHouseSearch("", {a, b, c})
+    gsse.SaveQueueTradingHouseSearch("", {a, b, c})
 end 
 
-local function SaveQueueTradingHouseSearch(name, params)
+function gsse.SaveQueueTradingHouseSearch(name, params)
     local delay = GetTradingHouseCooldownRemaining()
 
     if delay > 0 then
@@ -641,7 +657,7 @@ local function SaveQueueTradingHouseSearch(name, params)
         local delayInSeconds = math.ceil(delay / 1000)
         gsse.debug("waiting "..delay.."ms before executing search")
         GuildStoreSearchExStatus:SetText(string.format(gsse.lang.gui.searchpause, delayInSeconds));
-        ld_timer.addWithData("GSSE_Search", delay, SaveQueueTradingHouseSearch, 1, params)  
+        ld_timer.addWithData("GSSE_Search", delay, gsse.SaveQueueTradingHouseSearch, 1, params)  
     else
         gsse.debug("executing search")
         gsse.doTradingHouseSearch("", params)

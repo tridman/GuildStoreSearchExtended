@@ -12,6 +12,7 @@ function gsse.lang.sets.en()
 	--- General Strings
 
 	gsse.lang.core.addonName="Guild Store Search Extended";
+    gsse.lang.core.coloredAddonName="|c2080D0Guild Store Search|r |cffffc0Extended|r"; --added 0.11
 	
 	
 	----Config------
@@ -66,6 +67,7 @@ function gsse.lang.sets.en()
 	gsse.lang.gui.search_summsell=". Sell |cff00ff%s|r @ |cffc000%sg.|r"
 	
 	-- Config
+    gsse.lang.config.gen_hdr="General settings" --added 0.11
 	gsse.lang.config.gen_dbg_lbl="Debug Mode?"
 	gsse.lang.config.gen_dbg_tip="Display debug messages?"
 	gsse.lang.config.gen_dbg_warn="This will place lots of text in your chat window!"

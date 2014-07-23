@@ -7,10 +7,25 @@
 ## Version: 0.11-beta
 ## APIVersion: 100007
 ## SavedVariables: gsse_data
-## OptionalDependsOn: LibStub LibAddonMenu-1.0 BugEater
+## OptionalDependsOn: LibStub LibAddonMenu-2.0 BugEater
 
-Libs/LibStub/LibStub.lua
-Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+; LibStub 1.0 r2 implemented
+Libs\LibStub\LibStub.lua
+
+; LibAddonMenu-2.0 r13 implemented
+Libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
+Libs\LibAddonMenu-2.0\controls\panel.lua
+Libs\LibAddonMenu-2.0\controls\submenu.lua
+Libs\LibAddonMenu-2.0\controls\button.lua
+Libs\LibAddonMenu-2.0\controls\checkbox.lua
+Libs\LibAddonMenu-2.0\controls\colorpicker.lua
+Libs\LibAddonMenu-2.0\controls\custom.lua
+Libs\LibAddonMenu-2.0\controls\description.lua
+Libs\LibAddonMenu-2.0\controls\dropdown.lua
+Libs\LibAddonMenu-2.0\controls\editbox.lua
+Libs\LibAddonMenu-2.0\controls\header.lua
+Libs\LibAddonMenu-2.0\controls\slider.lua
+Libs\LibAddonMenu-2.0\controls\texture.lua
 
 timer.lua
 tooltips.lua

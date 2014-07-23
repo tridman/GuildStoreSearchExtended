@@ -6,12 +6,13 @@ function gsse.lang.sets.fr()
 	--- General Strings
 
 	gsse.lang.core.addonName="Guild Store Search Extended";
-	
+    gsse.lang.core.coloredAddonName="|c2080D0Guild Store Search|r |cffffc0Extended|r";
+
 	
 	----Config------
 	
 	gsse.lang.config_filt_markdown_lbl="Articles en promotions(%)"
-	gsse.lang.config_filt_markdown_tip="Les prix conseillés seront reduites par le pourcentage fixe ici."
+	gsse.lang.config_filt_markdown_tip="Les prix conseillÃ©s seront reduites par le pourcentage fixe ici."
 	
 	--- GUI -----------------
 	
@@ -60,6 +61,6 @@ function gsse.lang.sets.fr()
 	
 	
 	gsse.lang.config.gen_dbg_lbl="Debug Mode?"
-	gsse.lang.config.gen_dbg_tip="Afficher les messages de débogage?"
+	gsse.lang.config.gen_dbg_tip="Afficher les messages de dÃ©bogage?"
 	gsse.lang.config.gen_dbg_warn="Cela va afficher beaucoup de texte dans votre de chat!"	
 end
