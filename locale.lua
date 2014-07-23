@@ -5,7 +5,6 @@
 gsse.lang.sets.en()
 
 function gsse.lang.Set(lang)
-
     local language ="en"
 
     if lang==nil or lang=="" or lang=="Auto" then
