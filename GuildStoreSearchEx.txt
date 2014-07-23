@@ -2,15 +2,15 @@
 ; Media Inc. or its affiliates. The Elder Scrolls® and related logos are
 ; registered trademarks or trademarks of ZeniMax Media Inc. in the United
 ; States and/or other countries. All rights reserved.
-## Title: |c2080D0Guild Store Search|r |cffffc0Extended|r |cFF0000Fix|r
+## Title: |c2080D0Guild Store Search|r |cffffc0Extended|r
 ## Author: lintydruid/Sephiroth08
 ## Version: 0.10-beta
 ## APIVersion: 100007
 ## SavedVariables: gsse_data
 ## OptionalDependsOn: LibStub LibAddonMenu-1.0 BugEater
 
-LibStub/LibStub.lua
-LibAddonMenu-1.0/LibAddonMenu-1.0.lua
+Libs/LibStub/LibStub.lua
+Libs/LibAddonMenu-1.0/LibAddonMenu-1.0.lua
 
 timer.lua
 tooltips.lua
