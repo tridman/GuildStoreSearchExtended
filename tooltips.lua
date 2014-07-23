@@ -376,6 +376,8 @@ local function ToolTipHideHandler( control )
     if( control == PopupTooltip ) then
         ld_tooltip.popupUptoDate=false;
     end
+    
+    ld_tooltip.currLink=curMouseOverLink
 end
 
 local function ToolTipAddGameDataHandler( control )
