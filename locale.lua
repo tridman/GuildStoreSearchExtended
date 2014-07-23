@@ -9,7 +9,7 @@ function gsse.lang.Set(lang)
     local language ="en"
 
     if lang==nil or lang=="" or lang=="Auto" then
-        local language = GetCVar("language.2")
+        language = GetCVar("language.2")
     elseif lang=="English" then
         language = "en"
     elseif lang=="Deutsch" then
