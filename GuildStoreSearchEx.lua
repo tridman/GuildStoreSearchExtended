@@ -12,7 +12,7 @@ gsse={
     dropDownInit=false,
     last_search_count=0,		
     language_options={"Auto","English","Deutsch","Français"},
-    Version = "0.11-beta",
+    Version = "0.11.1-beta",
     Author = "lintydruid/Sephiroth08",	
 }
 gsse.data={
@@ -78,7 +78,7 @@ end
 function gsse.Initialize(eventCode, addOnName)
     if(addOnName == "GuildStoreSearchEx") then
         --	Load saved vars
-        gsse.data = ZO_SavedVars:NewAccountWide( "gsse_data" , 1 , nil ,defaults  , nil )
+        gsse.data = ZO_SavedVars:NewAccountWide( "gsse_data" , 1 , nil , gsse.defaults  , nil )
 
         -- Data Clean-up/Upgrade
         gsse.upgradeData();
