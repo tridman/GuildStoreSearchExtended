@@ -77,6 +77,8 @@ end
 
 function gsse.Initialize(eventCode, addOnName)
     if(addOnName == "GuildStoreSearchEx") then
+        EVENT_MANAGER:UnregisterForEvent("GuildStoreSearchEx", EVENT_ADD_ON_LOADED)
+        
         --	Load saved vars
         gsse.data = ZO_SavedVars:NewAccountWide( "gsse_data" , 1 , nil , gsse.defaults  , nil )
 
@@ -155,10 +157,7 @@ function gsse.Initialize(eventCode, addOnName)
 
         gsse.Reset()
 
-        ---Reset Session data
-        for id, data in pairs(gsse.data.itemData) do
-            gsse.data.itemData[id].session={};
-        end
+        gsse.ClearSessionData()
     end
 
     -- clean up  save search data
@@ -167,6 +166,17 @@ function gsse.Initialize(eventCode, addOnName)
     end
 
     GuildStoreSearchExFindMatchesButton:SetHidden(false)
+end
+
+function gsse.ClearSessionData()
+    ---Reset Session data
+    for id, data in pairs(gsse.data.itemData) do
+        for gname, value in pairs(gsse.data.itemData[id].session) do
+            if gsse.data.itemData[id].session[gname].lastUpdatedTimestamp == nil or (gsse.data.itemData[id].session[gname].lastUpdatedTimestamp < (GetTimeStamp() - 3600)) then
+                gsse.data.itemData[id].session[gname] = nil
+            end
+        end
+    end
 end
 
 ------------------------------ Functions------------------------------------
@@ -385,6 +395,7 @@ function gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
         local itmIndex= gsse.utils:NameCleanupLower(name).."::"..quality
         local gname=GetGuildName(guildId)
         local itmCost=price/stackCount
+        local currentTimestamp = GetTimeStamp()
 
         if gsse.data.itemData[itmIndex]==nil then
             gsse.data.itemData[itmIndex]={session={},history={}}
@@ -402,6 +413,8 @@ function gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
         if gsse.data.itemData[itmIndex].session[gname].max==-1 or gsse.data.itemData[itmIndex].session[gname].max<itmCost then
             gsse.data.itemData[itmIndex].session[gname].max=itmCost
         end
+
+        gsse.data.itemData[itmIndex].session[gname].lastUpdatedTimestamp = currentTimestamp
 
         gsse.data.itemData[itmIndex].session[gname].seen=gsse.data.itemData[itmIndex].session[gname].seen+1
 
@@ -421,6 +434,8 @@ function gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
         if gsse.data.itemData[itmIndex].history[gname].max==-1 or gsse.data.itemData[itmIndex].history[gname].max<itmCost then
             gsse.data.itemData[itmIndex].history[gname].max=itmCost
         end
+
+        gsse.data.itemData[itmIndex].history[gname].lastUpdatedTimestamp = currentTimestamp
 
         gsse.data.itemData[itmIndex].history[gname].seen=gsse.data.itemData[itmIndex].history[gname].seen+1
 
