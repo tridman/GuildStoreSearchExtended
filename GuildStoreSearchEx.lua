@@ -23,6 +23,7 @@ gsse.data={
     search_results={},
     last_search="",			
     language="Auto",
+    lastSearchRequest = {},
 }
 
 gsse.utils={}
@@ -47,6 +48,7 @@ gsse.defaults = {
         history = true,
         recommend = true
     },
+    lastSearchRequest = {},
 }
 
 -------------------------------Output --------------------
@@ -78,7 +80,7 @@ end
 function gsse.Initialize(eventCode, addOnName)
     if(addOnName == "GuildStoreSearchEx") then
         EVENT_MANAGER:UnregisterForEvent("GuildStoreSearchEx", EVENT_ADD_ON_LOADED)
-        
+
         --	Load saved vars
         gsse.data = ZO_SavedVars:NewAccountWide( "gsse_data" , 1 , nil , gsse.defaults  , nil )
 
@@ -164,6 +166,8 @@ function gsse.Initialize(eventCode, addOnName)
     for n=1,#gsse.data.search_results,1 do
         gsse.data.search_results[n][10]=-1 --- set page ref to -1
     end
+
+    gsse.SetCanContinueSearch()
 
     GuildStoreSearchExFindMatchesButton:SetHidden(false)
 end
@@ -251,6 +255,7 @@ function gsse.Reset()
     --- Rebuild list
     gsse.dropDownInit=false
     gsse.PopulateGuildList()
+    gsse.SetCanContinueSearch()
 end
 
 function gsse.SetResultLine(index, name, count, price, unitPrice, guildId, pageNumber, icon, quality, gName)
@@ -452,6 +457,10 @@ end
 function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, hasMorePages)
     gsse.debug("Results ("..gsse.State..")")
     GuildStoreSearchExStatus:SetText("")
+
+    gsse.data.lastSearchRequest.guildId = guildId
+    gsse.data.lastSearchRequest.currentPage = currentPage
+
     if gsse.State == "AWAITING_RESULTS" then
         gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
 
@@ -464,6 +473,8 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
             GuildStoreSearchExCounter:SetText(string.format(gsse.lang.gui.found, gsse.last_search_count, guildId))
             --GuildStoreSearchExFindMatchesButton:SetHidden(false)
             gsse.SetState("NONE")
+            gsse.data.lastSearchRequest = {}
+            gsse.SetCanContinueSearch()
         end
     elseif  gsse.State == "AWAITING_RESULTS_ALL" then
         gsse.debug("Results for all ["..guildId.."]")
@@ -495,6 +506,8 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
             GuildStoreSearchExCounter:SetText(string.format(gsse.lang.gui.foundall, gsse.last_search_count))
             -- GuildStoreSearchExFindMatchesButton:SetHidden(false)
             gsse.SetState("NONE")
+            gsse.data.lastSearchRequest = {}
+            gsse.SetCanContinueSearch()
         end
     end
 end
@@ -578,6 +591,22 @@ function gsse.GetGuildIdFromDropdown()
     return guildId
 end
 
+function gsse.SetGuildTextForDropdown(guildId)
+    local dropdown = ZO_ComboBox_ObjectFromContainer(GuildStoreSearchEx:GetNamedChild("GuildCombo"))
+    local items = dropdown:GetItems()
+    
+    if guildId ~= gsse.lang.gui.guild_all then
+        for key, value in pairs(items) do
+            if guildId == string.sub(value.name, 2, 2) then
+                guildId = value.name
+                break
+            end
+        end
+    end
+    
+    dropdown:SetSelectedItem(guildId)
+end
+
 function gsse.canUseTradingHouse(guildId)
     --local guildId=GetGuildId(guildInd)
     return ((CanBuyFromTradingHouse(guildId) or CanSellOnTradingHouse(guildId)) and DoesGuildHavePrivilege(guildId, GUILD_PRIVILEGE_TRADING_HOUSE))
@@ -595,6 +624,49 @@ function gsse.nextTradingHouse(guildInd)
     end
 
     return -1 -- no more
+end
+
+function gsse.SetCanContinueSearch()
+    local button = GuildStoreSearchEx:GetNamedChild("ContinueSearchButton")
+    
+    if gsse.data.lastSearchRequest.guildId == nil then
+        button:SetEnabled(false)
+    else
+        button:SetEnabled(true)
+    end
+end
+
+function gsse.ContinueSearch()
+    if ZO_TradingHouse:IsHidden() then
+        gsse.message(gsse.lang.gui.searchNoGS);
+        return
+    end
+
+    if gsse.State ~= "NONE" then 
+        gsse.message(gsse.lang.gui.searchBusy);
+        return
+
+    end
+    gsse.debug("Retrv...")
+
+    -- GuildStoreSearchExFindMatchesButton:SetHidden(true)
+
+    gsse.ClearResults()
+
+    gsse.SetGuildTextForDropdown(gsse.data.lastSearchRequest.SelectedGuild)
+    
+    GuildStoreSearchExCounter:SetText(gsse.lang.gui.searchStarte);
+
+    SelectTradingHouseGuildId(tonumber(gsse.data.lastSearchRequest.guildId))
+    
+    gsse.debug("Searching...")
+    gsse.queueTradingHouseSearch(gsse.data.lastSearchRequest.currentPage ,TRADING_HOUSE_SORT_SALE_PRICE, true)
+
+    if selectedText == gsse.lang.gui.guild_all then 
+        gsse.SetState("AWAITING_RESULTS_ALL")
+    else
+        gsse.SetState("AWAITING_RESULTS")
+    end
 end
 
 function gsse.Retrieve()   
@@ -615,16 +687,17 @@ function gsse.Retrieve()
     gsse.ClearResults()
 
     selectedText =  gsse.GetGuildIdFromDropdown()
+    gsse.data.lastSearchRequest.SelectedGuild = selectedText
 
     GuildStoreSearchExCounter:SetText(gsse.lang.gui.searchStarte);
-    gsse.last_search_count=0
+    gsse.last_search_count = 0
 
     if selectedText == gsse.lang.gui.guild_all then 
         gsse.debug("Finding all...")
         gsse.data.search_results = {} -- clear all results for a full refresh
-        local  firstTradingGuild=gsse.nextTradingHouse(0)
+        local firstTradingGuild = gsse.nextTradingHouse(0)
 
-        if firstTradingGuild==-1 then 
+        if firstTradingGuild == -1 then 
             GuildStoreSearchExCounter:SetText(gsse.lang.gui.noTradingGuilds);
             return
         end

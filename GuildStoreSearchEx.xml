@@ -26,7 +26,7 @@
 				<Button name="$(parent)RetrieveButton" font="ZoFontGame" color="CFDCBD" mouseEnabled="true" 
 				        verticalAlignment="CENTER" horizontalAlignment="CENTER" text="Retrieve" inherits="ZO_DefaultButton" >
 					<Dimensions x="120" y="30" />
-					<Anchor point="BOTTOMLEFT" offsetX="135" offsetY="-55" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)ResetButton" relativePoint="TOPRIGHT" offsetX="5" offsetY="0" />
 					
 				
 					
@@ -35,7 +35,20 @@
 						gsse.Retrieve()
 					</OnMouseDown>	
 
-				</Button>					
+				</Button>	
+				<Button name="$(parent)ContinueSearchButton" font="ZoFontGame" color="CFDCBD" mouseEnabled="true" 
+				        verticalAlignment="CENTER" horizontalAlignment="CENTER" text="Continue last search" inherits="ZO_DefaultButton" >
+					<Dimensions x="150" y="30" />
+					<Anchor point="TOPLEFT" relativeTo="$(parent)RetrieveButton" relativePoint="TOPRIGHT" offsetX="5" offsetY="0" />
+					
+				
+					
+					
+					<OnMouseDown>
+						gsse.ContinueSearch()
+					</OnMouseDown>	
+
+				</Button>
 				<Button name="$(parent)FindMatchesButton" font="ZoFontGame" color="CFDCBD" mouseEnabled="true" 
 				        verticalAlignment="CENTER" horizontalAlignment="CENTER" text="Find Match" hidden="true" inherits="ZO_DefaultButton" >
 					<Dimensions x="150" y="30" />
