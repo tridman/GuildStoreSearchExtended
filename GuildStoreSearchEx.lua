@@ -162,11 +162,6 @@ function gsse.Initialize(eventCode, addOnName)
         gsse.ClearSessionData()
     end
 
-    -- clean up  save search data
-    for n=1,#gsse.data.search_results,1 do
-        gsse.data.search_results[n][10]=-1 --- set page ref to -1
-    end
-
     gsse.SetCanContinueSearch()
 
     GuildStoreSearchExFindMatchesButton:SetHidden(false)
@@ -179,6 +174,13 @@ function gsse.ClearSessionData()
             if gsse.data.itemData[id].session[gname].lastUpdatedTimestamp == nil or (gsse.data.itemData[id].session[gname].lastUpdatedTimestamp < (GetTimeStamp() - 3600)) then
                 gsse.data.itemData[id].session[gname] = nil
             end
+        end
+    end
+    
+    -- clean up  save search data
+    for n=1,#gsse.data.search_results,1 do
+        if gsse.data.search_results[n][12] == nil or gsse.data.search_results[n][12] < (GetTimeStamp() - 3600) then
+            gsse.data.search_results[n][10]=-1 --- set page ref to -1
         end
     end
 end
@@ -391,7 +393,7 @@ function gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
         local currentResult = {icon, name, quality, tonumber(stackCount), seller, 
             tonumber(timeRemaining), tonumber(price), 
             tonumber(price)/tonumber(stackCount),
-            guildId, currentPage,truncGuildName(GetGuildName(guildId))}
+            guildId, currentPage,truncGuildName(GetGuildName(guildId)),GetTimeStamp()}
 
         table.insert(gsse.data.search_results, currentResult)
 
