@@ -12,7 +12,7 @@
 ; LibStub 1.0 r2 implemented
 Libs\LibStub\LibStub.lua
 
-; LibAddonMenu-2.0 r13 implemented
+; LibAddonMenu-2.0 r14 implemented
 Libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
 Libs\LibAddonMenu-2.0\controls\panel.lua
 Libs\LibAddonMenu-2.0\controls\submenu.lua
