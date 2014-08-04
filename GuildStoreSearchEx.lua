@@ -8,11 +8,12 @@ gsse={
     StoreItems = {},
     SearchMatches = {},
     Terms = nil,
-    MAX_GUILD_ID = 5,
+    CurrentGuildIndex = 1,
+    Guilds = {},
     dropDownInit=false,
     last_search_count=0,		
     language_options={"Auto","English","Deutsch","Français"},
-    Version = "0.12-beta",
+    Version = "0.13-beta",
     Author = "lintydruid/Sephiroth08",	
 }
 gsse.data={
@@ -160,11 +161,14 @@ function gsse.Initialize(eventCode, addOnName)
         gsse.Reset()
 
         gsse.ClearSessionData()
+
+        gsse.SetCanContinueSearch()
+
+        GuildStoreSearchExFindMatchesButton:SetHidden(false)
+
+        EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_GUILD_SELF_JOINED_GUILD, gsse.PopulateGuildList)
+        EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_GUILD_SELF_LEFT_GUILD, gsse.PopulateGuildList)
     end
-
-    gsse.SetCanContinueSearch()
-
-    GuildStoreSearchExFindMatchesButton:SetHidden(false)
 end
 
 function gsse.ClearSessionData()
@@ -176,7 +180,7 @@ function gsse.ClearSessionData()
             end
         end
     end
-    
+
     -- clean up  save search data
     for n=1,#gsse.data.search_results,1 do
         if gsse.data.search_results[n][12] == nil or gsse.data.search_results[n][12] < (GetTimeStamp() - 3600) then
@@ -487,10 +491,10 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
             gsse.debug("Next Page...")
             gsse.queueTradingHouseSearch(currentPage+1,TRADING_HOUSE_SORT_SALE_PRICE, true)
             GuildStoreSearchExCounter:SetText(string.format(gsse.lang.gui.retrv, guildId, currentPage+1))
-        elseif guildId < gsse.MAX_GUILD_ID then
+        elseif guildId ~= gsse.Guilds[#gsse.Guilds].Id then
             local canBuyFrom = true
 
-            local  nextTradingGuild=gsse.nextTradingHouse(guildId)
+            local  nextTradingGuild = gsse.nextTradingHouse(guildId)
 
             gsse.debug("Next Guild is "..nextTradingGuild.."...")	
 
@@ -542,40 +546,47 @@ function gsse.PopulateGuildList()
     gsse.dropDownInit=true
 
     local dropdown = ZO_ComboBox_ObjectFromContainer(GuildStoreSearchEx:GetNamedChild("GuildCombo"))
-    local guilds = {}
+    gsse.CurrentGuildIndex = 1
+    gsse.Guilds = {}
 
     dropdown:ClearItems()
 
     local entry = dropdown:CreateItemEntry(gsse.lang.gui.guild_all, function() end)
     dropdown:AddItem(entry)
 
-    for i = 1,gsse.MAX_GUILD_ID do
-        local id =GetGuildId(i)
-        local name = GetGuildName(id)
-        --	local id,name,alliance = GetTradingHouseGuildDetails(i)
-        if name == nil or name == "" then 
-            break 
-        end
+    local numGuilds = GetNumGuilds()
+    local currentIndex = 0
 
-        local color="|cFFFFFF"
+    while #gsse.Guilds < numGuilds do
+        local resultId = GetGuildId(currentIndex)
 
-        if not ZO_TradingHouse:IsHidden() then
-            if gsse.canUseTradingHouse(id)==false then 
+        if resultId ~= 0 then
+            local name = GetGuildName(resultId)
+
+            local color="|cFFFFFF"
+
+            if gsse.canUseTradingHouse(resultId) == false then
                 color="|cff0000" 
+            else
+                color="|cFFFF00"
             end
-        else
-            color="|cFFFF00"
+
+            gsse.debug("Dropdown add ::".. string.format(gsse.lang.gui.guild_templ, resultId, color, name))
+
+            local formattedName = string.format(gsse.lang.gui.guild_templ, resultId, color, name)
+
+            local entry = dropdown:CreateItemEntry(string.format(gsse.lang.gui.guild_templ, resultId, color, name), function() end)
+            dropdown:AddItem(entry)
+
+            table.insert(gsse.Guilds, { Id = resultId, Name = name, FormattedName = formattedName })
         end
 
-        gsse.debug("Dropdown add ::".. string.format(gsse.lang.gui.guild_templ, id,color, name))
-
-        local entry = dropdown:CreateItemEntry(string.format(gsse.lang.gui.guild_templ, id,color, name), function() end)
-        dropdown:AddItem(entry)
-
-        guilds[id] = name
+        currentIndex = currentIndex + 1
     end
 
     dropdown:SetSelectedItem(gsse.lang.gui.guild_all) 
+
+    gsse.dropDownInit = false
 end
 
 function gsse.StatusReceived()
@@ -596,7 +607,7 @@ end
 function gsse.SetGuildTextForDropdown(guildId)
     local dropdown = ZO_ComboBox_ObjectFromContainer(GuildStoreSearchEx:GetNamedChild("GuildCombo"))
     local items = dropdown:GetItems()
-    
+
     if guildId ~= gsse.lang.gui.guild_all then
         for key, value in pairs(items) do
             if guildId == string.sub(value.name, 2, 2) then
@@ -605,24 +616,22 @@ function gsse.SetGuildTextForDropdown(guildId)
             end
         end
     end
-    
+
     dropdown:SetSelectedItem(guildId)
 end
 
 function gsse.canUseTradingHouse(guildId)
-    --local guildId=GetGuildId(guildInd)
-    return ((CanBuyFromTradingHouse(guildId) or CanSellOnTradingHouse(guildId)) and DoesGuildHavePrivilege(guildId, GUILD_PRIVILEGE_TRADING_HOUSE))
+    return ((DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_STORE_BUY) or DoesPlayerHaveGuildPermission(guildId, GUILD_PERMISSION_STORE_SELL)) and DoesGuildHavePrivilege(guildId, GUILD_PRIVILEGE_TRADING_HOUSE))
 end
 
 function gsse.nextTradingHouse(guildInd)
     guildInd=guildInd+1
 
-    while guildInd<=gsse.MAX_GUILD_ID do
-        if gsse.canUseTradingHouse(guildInd) then 
-            return guildInd 
+    for i = 1, #gsse.Guilds, 1 do
+        local guildId = gsse.Guilds[i].Id
+        if gsse.canUseTradingHouse(guildId) then 
+            return guildId
         end
-
-        guildInd=guildInd+1
     end
 
     return -1 -- no more
@@ -630,7 +639,7 @@ end
 
 function gsse.SetCanContinueSearch()
     local button = GuildStoreSearchEx:GetNamedChild("ContinueSearchButton")
-    
+
     if gsse.data.lastSearchRequest.guildId == nil then
         button:SetEnabled(false)
     else
@@ -656,11 +665,11 @@ function gsse.ContinueSearch()
     gsse.ClearResults()
 
     gsse.SetGuildTextForDropdown(gsse.data.lastSearchRequest.SelectedGuild)
-    
+
     GuildStoreSearchExCounter:SetText(gsse.lang.gui.searchStarte);
 
     SelectTradingHouseGuildId(tonumber(gsse.data.lastSearchRequest.guildId))
-    
+
     gsse.debug("Searching...")
     gsse.queueTradingHouseSearch(gsse.data.lastSearchRequest.currentPage ,TRADING_HOUSE_SORT_SALE_PRICE, true)
 
