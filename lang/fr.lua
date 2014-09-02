@@ -11,8 +11,8 @@ function gsse.lang.sets.fr()
 	
 	----Config------
 	
-	gsse.lang.config_filt_markdown_lbl="Articles en promotions(%)"
-	gsse.lang.config_filt_markdown_tip="Les prix conseillés seront reduites par le pourcentage fixe ici."
+	gsse.lang.config_filt_markdown_lbl="Articles en promotion(%)"
+	gsse.lang.config_filt_markdown_tip="Les prix conseillés seront reduits par ce pourcentage fixe."
 	
 	--- GUI -----------------
 	
@@ -41,11 +41,11 @@ function gsse.lang.sets.fr()
 	gsse.lang.gui.searchready="|c00ff00Pret pour recherche.|r"
 	
 	gsse.lang.gui.search=working.."Recherche Guilde |c00ffff%s|r, page |c00ffff%s|r" -- guild, page
-	gsse.lang.gui.found=complete.."Resultat |c00ffff%s|r objets depuis Guilde |c00ffff%s|r" -- items, guild
+	gsse.lang.gui.found=complete.."Résultat: |c00ffff%s|r objets de la Guilde |c00ffff%s|r" -- items, guild
 	gsse.lang.gui.retrv=working.."Scan de la Guilde |c00ffff%s|r, page |c00ffff%s|r" -- guild, page
-	gsse.lang.gui.foundall=complete.."Resultat |c00ffff%s|r objets |c00ffffau totale|r " -- items
-	gsse.lang.gui.searchStarte=working.."Debut de recherche..."
-	gsse.lang.gui.searchBusy=working.."|cff0000Guild Store Search Ex est occupe attendez"
+	gsse.lang.gui.foundall=complete.."Resultat: |c00ffff%s|r objets |c00ffffau total|r " -- items
+	gsse.lang.gui.searchStarte=working.."Debut de la recherche..."
+	gsse.lang.gui.searchBusy=working.."|cff0000Guild Store Search Ex est occupé, attendez"
 	
 	
 	gsse.lang.gui.noTradingGuilds="|cff0000Il n'y a pas de boutique de guilde!|r"
@@ -54,7 +54,7 @@ function gsse.lang.sets.fr()
 	gsse.lang.gui.guild_all="|c00cc00All"
 	gsse.lang.gui.guild_templ="G%s: %s%s" --Guild Num, color, Guild Name
 	
-	gsse.lang.gui.search_summ= "%s resultat. prix unique (Max/Min/Moy/Reduit):|cff0000%s|r/|cff8000%s|r/|cfff000%s|r/|c00ff00%s|r%s" -- Max, Min, Avg, Undercut, Sell for price
+	gsse.lang.gui.search_summ= "%s résultat. prix unique (Max/Min/Moy/Réduit):|cff0000%s|r/|cff8000%s|r/|cfff000%s|r/|c00ff00%s|r%s" -- Max, Min, Avg, Undercut, Sell for price
 	
 	
 	gsse.lang.gui.search_summsell=". Sell |cff00ff%s|r @ |cffc000%sg.|r"
@@ -62,5 +62,5 @@ function gsse.lang.sets.fr()
 	
 	gsse.lang.config.gen_dbg_lbl="Debug Mode?"
 	gsse.lang.config.gen_dbg_tip="Afficher les messages de débogage?"
-	gsse.lang.config.gen_dbg_warn="Cela va afficher beaucoup de texte dans votre de chat!"	
+	gsse.lang.config.gen_dbg_warn="Cela va afficher beaucoup de texte dans votre fenêtre de chat!"	
 end
