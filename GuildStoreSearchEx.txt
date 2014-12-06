@@ -4,8 +4,8 @@
 ; States and/or other countries. All rights reserved.
 ## Title: |c2080D0Guild Store Search|r |cffffc0Extended|r
 ## Author: lintydruid/Sephiroth08
-## Version: 0.13.2a-beta
-## APIVersion: 100009
+## Version: 0.13.2b-beta
+## APIVersion: 100010
 ## SavedVariables: gsse_data
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0 BugEater
 
