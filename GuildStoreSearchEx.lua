@@ -13,7 +13,7 @@ gsse={
     dropDownInit=false,
     last_search_count=0,		
     language_options={"Auto","English","Deutsch","Français"},
-    Version = "0.13.2a-beta",
+    Version = "0.13.2b-beta",
     Author = "lintydruid/Sephiroth08",	
 }
 gsse.data={
