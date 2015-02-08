@@ -1102,6 +1102,11 @@ end
 SLASH_COMMANDS["/gsse"] = gsse.Command
 
 EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_ADD_ON_LOADED, gsse.Initialize)
+EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_SCREEN_RESIZED, function(...) 
+  PopupTooltip:SetHidden(true);
+  PopupTooltip:ClearLines();
+    PopupTooltipIcon:SetHidden(true)
+  end)
 EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, gsse.ResultsReceived)
 EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_TRADING_HOUSE_STATUS_RECEIVED, gsse.StatusReceived)
 EVENT_MANAGER:RegisterForEvent("GuildStoreSearchEx", EVENT_CLOSE_TRADING_HOUSE, gsse.GuildStoreClosed)
