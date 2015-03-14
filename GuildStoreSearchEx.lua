@@ -498,7 +498,7 @@ function gsse.ResultsReceived (eventId, guildId, numItemsOnPage, currentPage, ha
 
             gsse.debug("Next Guild is "..nextTradingGuild.."...")	
 
-            if nextTradingGuild==-1 then 
+            if nextTradingGuild==-1 or guildId==0 then 
                 local resultCount = table.getn(gsse.data.search_results)
                 GuildStoreSearchExMatchCounter:SetText(gsse.lang.gui.searchready)
                 GuildStoreSearchExCounter:SetText(string.format(gsse.lang.gui.foundall, gsse.last_search_count))
