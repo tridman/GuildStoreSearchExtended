@@ -13,8 +13,8 @@ gsse={
     dropDownInit=false,
     last_search_count=0,		
     language_options={"Auto","English","Deutsch","Français"},
-    Version = "0.13.2b-beta",
-    Author = "lintydruid/Sephiroth08",	
+    Version = "0.13.2e-beta",
+    Author = "lintydruid/Sephiroth08/tridman",	
 }
 gsse.data={
     window={x=0,y=0},
@@ -394,65 +394,79 @@ function gsse.CollateResults(guildId, numItemsOnPage, currentPage, hasMorePages)
         local icon, name, quality, stackCount, seller, timeRemaining, price = 
         GetTradingHouseSearchResultItemInfo(i)
 
-        local currentResult = {icon, name, quality, tonumber(stackCount), seller, 
-            tonumber(timeRemaining), tonumber(price), 
-            tonumber(price)/tonumber(stackCount),
-            guildId, currentPage,truncGuildName(GetGuildName(guildId)),GetTimeStamp()}
+        if (not(tonumber(stackCount) == nil)
+            and not(tonumber(timeRemaining) == nil)
+            and not (tonumber(price) == nil))
+        then
 
-        table.insert(gsse.data.search_results, currentResult)
-
-        --Build Item History
-
-        local itmIndex= gsse.utils:NameCleanupLower(name).."::"..quality
-        local gname=GetGuildName(guildId)
-        local itmCost=price/stackCount
-        local currentTimestamp = GetTimeStamp()
-
-        if gsse.data.itemData[itmIndex]==nil then
-            gsse.data.itemData[itmIndex]={session={},history={}}
+          local currentResult = {icon, name, quality, tonumber(stackCount), seller, 
+              tonumber(timeRemaining), tonumber(price), 
+              tonumber(price)/tonumber(stackCount),
+              guildId, currentPage,truncGuildName(GetGuildName(guildId)),GetTimeStamp()}
+  
+          table.insert(gsse.data.search_results, currentResult)
+  
+          --Build Item History
+  
+          local itmIndex= gsse.utils:NameCleanupLower(name).."::"..quality
+          local gname=GetGuildName(guildId)
+          local itmCost=tonumber(price)/tonumber(stackCount)
+          local currentTimestamp = GetTimeStamp()
+  
+          if gsse.data.itemData[itmIndex]==nil then
+              gsse.data.itemData[itmIndex]={session={},history={}}
+          end
+  
+          ---- Session
+          if gsse.data.itemData[itmIndex].session[gname]==nil then
+              gsse.data.itemData[itmIndex].session[gname] = {min=-1, max=-1, seen=0, sum=0, avg=0}
+          end
+  
+          if gsse.data.itemData[itmIndex].session[gname].min==-1 or gsse.data.itemData[itmIndex].session[gname].min>itmCost then
+              gsse.data.itemData[itmIndex].session[gname].min=itmCost
+          end
+  
+          if gsse.data.itemData[itmIndex].session[gname].max==-1 or gsse.data.itemData[itmIndex].session[gname].max<itmCost then
+              gsse.data.itemData[itmIndex].session[gname].max=itmCost
+          end
+  
+          gsse.data.itemData[itmIndex].session[gname].lastUpdatedTimestamp = currentTimestamp
+  
+          gsse.data.itemData[itmIndex].session[gname].seen=gsse.data.itemData[itmIndex].session[gname].seen+1
+  
+          gsse.data.itemData[itmIndex].session[gname].sum=gsse.data.itemData[itmIndex].session[gname].sum+itmCost
+  
+          gsse.data.itemData[itmIndex].session[gname].avg=gsse.data.itemData[itmIndex].session[gname].sum/gsse.data.itemData[itmIndex].session[gname].seen
+  
+          -- history
+          if gsse.data.itemData[itmIndex].history[gname]==nil then
+              gsse.data.itemData[itmIndex].history[gname] = {min=-1, max=-1, seen=0, sum=0, avg=0}
+          end
+  
+          if gsse.data.itemData[itmIndex].history[gname].min==-1 or gsse.data.itemData[itmIndex].history[gname].min>itmCost then
+              gsse.data.itemData[itmIndex].history[gname].min=itmCost
+          end
+  
+          if gsse.data.itemData[itmIndex].history[gname].max==-1 or gsse.data.itemData[itmIndex].history[gname].max<itmCost then
+              gsse.data.itemData[itmIndex].history[gname].max=itmCost
+          end
+  
+          gsse.data.itemData[itmIndex].history[gname].lastUpdatedTimestamp = currentTimestamp
+  
+          gsse.data.itemData[itmIndex].history[gname].seen=gsse.data.itemData[itmIndex].history[gname].seen+1
+  
+          gsse.data.itemData[itmIndex].history[gname].sum=gsse.data.itemData[itmIndex].history[gname].sum+itmCost
+  
+          gsse.data.itemData[itmIndex].history[gname].avg=gsse.data.itemData[itmIndex].history[gname].sum/gsse.data.itemData[itmIndex].history[gname].seen
+        else
+          gsse.debug("--------------------------------------")
+          gsse.debug("ERROR: Tonumber conversion failed.")
+          gsse.debug("stackCount: "..stackCount)
+          gsse.debug("timeRemaining: "..timeRemaining)
+          gsse.debug("price: "..price)
+          gsse.debug("--------------------------------------")
+          
         end
-
-        ---- Session
-        if gsse.data.itemData[itmIndex].session[gname]==nil then
-            gsse.data.itemData[itmIndex].session[gname] = {min=-1, max=-1, seen=0, sum=0, avg=0}
-        end
-
-        if gsse.data.itemData[itmIndex].session[gname].min==-1 or gsse.data.itemData[itmIndex].session[gname].min>itmCost then
-            gsse.data.itemData[itmIndex].session[gname].min=itmCost
-        end
-
-        if gsse.data.itemData[itmIndex].session[gname].max==-1 or gsse.data.itemData[itmIndex].session[gname].max<itmCost then
-            gsse.data.itemData[itmIndex].session[gname].max=itmCost
-        end
-
-        gsse.data.itemData[itmIndex].session[gname].lastUpdatedTimestamp = currentTimestamp
-
-        gsse.data.itemData[itmIndex].session[gname].seen=gsse.data.itemData[itmIndex].session[gname].seen+1
-
-        gsse.data.itemData[itmIndex].session[gname].sum=gsse.data.itemData[itmIndex].session[gname].sum+itmCost
-
-        gsse.data.itemData[itmIndex].session[gname].avg=gsse.data.itemData[itmIndex].session[gname].sum/gsse.data.itemData[itmIndex].session[gname].seen
-
-        -- history
-        if gsse.data.itemData[itmIndex].history[gname]==nil then
-            gsse.data.itemData[itmIndex].history[gname] = {min=-1, max=-1, seen=0, sum=0, avg=0}
-        end
-
-        if gsse.data.itemData[itmIndex].history[gname].min==-1 or gsse.data.itemData[itmIndex].history[gname].min>itmCost then
-            gsse.data.itemData[itmIndex].history[gname].min=itmCost
-        end
-
-        if gsse.data.itemData[itmIndex].history[gname].max==-1 or gsse.data.itemData[itmIndex].history[gname].max<itmCost then
-            gsse.data.itemData[itmIndex].history[gname].max=itmCost
-        end
-
-        gsse.data.itemData[itmIndex].history[gname].lastUpdatedTimestamp = currentTimestamp
-
-        gsse.data.itemData[itmIndex].history[gname].seen=gsse.data.itemData[itmIndex].history[gname].seen+1
-
-        gsse.data.itemData[itmIndex].history[gname].sum=gsse.data.itemData[itmIndex].history[gname].sum+itmCost
-
-        gsse.data.itemData[itmIndex].history[gname].avg=gsse.data.itemData[itmIndex].history[gname].sum/gsse.data.itemData[itmIndex].history[gname].seen
     end
 end
 
