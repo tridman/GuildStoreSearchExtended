@@ -15,6 +15,8 @@ function gsse.lang.Set(lang)
         language = "de"
     elseif lang=="Français" then
         language = "fr"
+    elseif lang=="Russian" then
+        language = "ru"
     end
 
     if (language== nil or language=="en") then  -- No language or en
@@ -30,6 +32,12 @@ function gsse.lang.Set(lang)
 
     if (language=="de") then  -- de
         gsse.lang.sets.de()
+        gsse.lang.refresh()
+        return;
+    end
+    
+    if (language=="ru") then  -- ru
+        gsse.lang.sets.ru()
         gsse.lang.refresh()
         return;
     end

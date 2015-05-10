@@ -37,6 +37,7 @@ GuildStoreSearchUtilEx.lua
 lang/en.lua
 lang/de.lua
 lang/fr.lua
+lang/ru.lua
 
 GuildStoreSearchEx.xml
 

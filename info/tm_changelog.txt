@@ -1,0 +1,7 @@
+0.13.2f:
+Integrated Russian translation by KiriX
+
+0.13.2e:
+- Fixed searchloop at Guildmerchants (although they are still not really supported by the addon. No history, etc.)
+- Implemented possible workaround for numerical conversion errors:
+		Items wich would cause those errors will be ignored and not added to searchresults or history. 
