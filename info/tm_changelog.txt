@@ -1,3 +1,6 @@
+0.13.2g:
+Minor translation fixes
+
 0.13.2f:
 Integrated Russian translation by KiriX
 

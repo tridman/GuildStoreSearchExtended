@@ -15,6 +15,7 @@ function gsse.lang.sets.de()
 	
 	gsse.lang.gui.reset_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/inventory/inventory_tabicon_junk_up.dds").."Zur\195\188cksetzen."
 	gsse.lang.gui.rtrv_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_trade_up.dds").."Einlesen"
+	gsse.lang.gui.ctnu_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_trade_up.dds").."Suche fortsetzen"
 	gsse.lang.gui.find_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/lfg/lfg_tabicon_grouptools_up.dds").."Suchen"
 	gsse.lang.gui.close_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_cancel_up.dds").."Schlie\195\159en"
 	gsse.lang.gui.searchfor_lbl="Suche nach:"

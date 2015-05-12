@@ -24,6 +24,7 @@ function gsse.lang.sets.ru()
 	
 	gsse.lang.gui.reset_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/inventory/inventory_tabicon_junk_up.dds").."Càpocèòö"
 	gsse.lang.gui.rtrv_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_trade_up.dds").."Çaïpocèòö"
+	gsse.lang.gui.ctnu_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_trade_up.dds").."Ïpoäoìæèòö ïocìeäîèé ïoècê"
 	gsse.lang.gui.find_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/lfg/lfg_tabicon_grouptools_up.dds").."Îaéòè coáïaäeîèü"
 	gsse.lang.gui.close_btn=string.format(gsse.lang.core.icon_template1,"/esoui/art/hud/radialicon_cancel_up.dds").."Çaêpÿòö"
 	gsse.lang.gui.searchfor_lbl="Ècêaòö:"

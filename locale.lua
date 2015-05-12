@@ -48,6 +48,7 @@ end
 function gsse.lang.refresh()
     GuildStoreSearchExResetButton:SetText(gsse.lang.gui.reset_btn)
     GuildStoreSearchExRetrieveButton:SetText(gsse.lang.gui.rtrv_btn)
+    GuildStoreSearchExContinueSearchButton:SetText(gsse.lang.gui.ctnu_btn)
     GuildStoreSearchExFindMatchesButton:SetText(gsse.lang.gui.find_btn)
     GuildStoreSearchExCloseButton:SetText(gsse.lang.gui.close_btn)
     GuildStoreSearchExForLabel:SetText(gsse.lang.gui.searchfor_lbl)
