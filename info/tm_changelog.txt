@@ -1,3 +1,7 @@
+0.13.2h:
+APIVersion: 100012
+Updated LibAddonMenu to 2.0r18
+
 0.13.2g:
 Minor translation fixes
 
